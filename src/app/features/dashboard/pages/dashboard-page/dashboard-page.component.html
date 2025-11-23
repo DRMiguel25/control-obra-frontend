@@ -1,0 +1,153 @@
+<div class="p-6">
+  <!-- Título y Estado de Carga -->
+  <h1 class="text-3xl font-bold mb-6">Dashboard Operativo - {{ proyecto()?.nombre || 'Cargando Proyecto...' }}</h1>
+
+  <!-- PANTALLA DE CARGA (SKELETON) -->
+  <div *ngIf="loading(); else content" class="animate-pulse space-y-6">
+    <!-- Header Skeleton -->
+    <div class="h-10 bg-slate-200 rounded w-1/3 mb-6"></div>
+
+    <!-- KPI Grid Skeleton -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div class="h-32 bg-slate-200 rounded shadow-lg"></div>
+      <div class="h-32 bg-slate-200 rounded shadow-lg"></div>
+      <div class="h-32 bg-slate-200 rounded shadow-lg"></div>
+      <div class="h-32 bg-slate-200 rounded shadow-lg"></div>
+    </div>
+
+    <!-- Button Skeleton -->
+    <div class="h-12 bg-slate-200 rounded w-48 my-6"></div>
+
+    <!-- Table Skeleton -->
+    <div class="space-y-4">
+      <div class="h-12 bg-slate-200 rounded w-full"></div>
+      <div class="h-12 bg-slate-200 rounded w-full"></div>
+      <div class="h-12 bg-slate-200 rounded w-full"></div>
+      <div class="h-12 bg-slate-200 rounded w-full"></div>
+      <div class="h-12 bg-slate-200 rounded w-full"></div>
+    </div>
+  </div>
+
+  <!-- Contenido Principal -->
+  <ng-template #content>
+    <!-- PANTALLA DE ERROR -->
+    <div *ngIf="error(); else dashboardContent">
+      <div class="alert alert-error shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <h3 class="font-bold">Error</h3>
+          <div class="text-xs">{{ error() }}</div>
+        </div>
+        <button class="btn btn-sm btn-ghost" (click)="retry()">Reintentar</button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- PANTALLA DEL DASHBOARD (VISIBLE) -->
+  <ng-template #dashboardContent>
+
+    <!-- FILA DE KPIS (Diseño de Figma) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+      <!-- KPI 1: RIESGO DE DESVIACIÓN -->
+      <div class="card shadow-lg" [ngClass]="riesgoColor()">
+        <div class="card-body p-4 text-white">
+          <h2 class="text-sm font-semibold">Riesgo de Desviación Presupuestal</h2>
+          <p class="text-4xl font-extrabold">{{ desviacion()?.riesgoDesviacion || 'N/A' }}</p>
+        </div>
+      </div>
+
+      <!-- KPI 2, 3, 4: KPIS Secundarios -->
+      <app-kpi-card title="Desviación Porcentual" [value]="desviacion()?.desviacionPorcentaje || 0"
+        subtitle="vs. Presupuesto Estimado" [isCritical]="desviacionEsPositiva()" [hasIcon]="true" />
+      <app-kpi-card title="Costo Estimado" [value]="desviacion()?.costoEstimado || 0" subtitle="Presupuesto Total" />
+      <app-kpi-card title="Costo Proyectado Final (EAC)" [value]="desviacion()?.costoProyectadoFinal || 0"
+        subtitle="Proyección Actual" />
+    </div>
+
+    <!-- Botón para Agregar Nueva Estimación -->
+    <div class="my-6">
+      <button (click)="handleAgregarEstimacion()" class="btn btn-success gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+            clip-rule="evenodd" />
+        </svg>
+        Agregar Estimación de Costo
+      </button>
+    </div>
+
+    <!-- TABLA DE ESTIMACIONES (con eventos de avance) -->
+    <app-estimaciones-table [estimaciones]="proyecto()?.estimaciones ?? null"
+      (registrarAvance)="handleRegistrarAvance($event)" (editarEstimacion)="handleEditarEstimacion($event)"
+      (eliminarEstimacion)="handleEliminarEstimacion($event)" (editarAvance)="handleEditarAvance($event)"
+      (eliminarAvance)="handleEliminarAvance($event)">
+    </app-estimaciones-table>
+
+  </ng-template>
+
+  <!-- MODALES CONDICIONALES -->
+
+  <!-- MODAL 0: AGREGAR ESTIMACIÓN (POST) -->
+  <app-add-estimacion-modal *ngIf="isAddEstimacionModalOpen() && proyecto()" [proyectoId]="proyecto()!.id"
+    (close)="isAddEstimacionModalOpen.set(false)" (estimacionCreada)="handleRecargaDatos()" />
+
+  <!-- MODAL 1: REGISTRAR AVANCE (POST) -->
+  <app-avance-form-modal *ngIf="isAvanceModalOpen() && selectedEstimacion()" [estimacion]="selectedEstimacion()!"
+    (close)="isAvanceModalOpen.set(false)" (avanceRegistrado)="handleRecargaDatos()" />
+
+  <!-- MODAL 2: EDITAR ESTIMACIÓN (PUT/PATCH) -->
+  <app-edit-estimacion-modal *ngIf="isEditModalOpen() && selectedEstimacion()" [estimacion]="selectedEstimacion()!"
+    (close)="isEditModalOpen.set(false)" (estimacionActualizada)="handleRecargaDatos()" />
+
+  <!-- MODAL 3: CONFIRMAR ELIMINACIÓN DE ESTIMACIÓN (DELETE) -->
+  <app-confirm-delete-modal *ngIf="isDeleteModalOpen() && selectedEstimacion()" [estimacion]="selectedEstimacion()!"
+    (close)="isDeleteModalOpen.set(false)" (estimacionEliminada)="handleRecargaDatos()" />
+
+  <!-- MODAL 4: CONFIRMAR ELIMINACIÓN DE AVANCE (DELETE) -->
+  <div *ngIf="isDeleteAvanceModalOpen()" class="modal modal-open">
+    <div class="modal-box max-w-md">
+      <h3 class="font-bold text-lg text-slate-800 mb-4">¿Eliminar Avance?</h3>
+
+      <div class="py-4">
+        <p class="text-slate-700 mb-2">
+          ¿Estás seguro de que deseas eliminar este avance?
+        </p>
+        <div *ngIf="selectedAvance()" class="bg-slate-100 p-3 rounded-lg mt-3">
+          <p class="text-sm"><strong>ID:</strong> {{ selectedAvance()?.id }}</p>
+          <p class="text-sm"><strong>Monto ejecutado:</strong> ${{ selectedAvance()?.montoEjecutado | number: '1.2-2' }}
+          </p>
+          <p class="text-sm"><strong>% Completado:</strong> {{ selectedAvance()?.porcentajeCompletado }}%</p>
+        </div>
+        <p class="text-sm text-slate-500 mt-3">
+          Esta acción no se puede deshacer.
+        </p>
+      </div>
+
+      <!-- Error de eliminación -->
+      <div *ngIf="deleteAvanceError()" class="alert alert-error shadow-lg mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <h3 class="font-bold">Error</h3>
+          <div class="text-xs">{{ deleteAvanceError() }}</div>
+        </div>
+      </div>
+
+      <div class="modal-action">
+        <button (click)="cancelarEliminacionAvance()" class="btn btn-ghost">Cancelar</button>
+        <button (click)="confirmarEliminacionAvance()" class="btn btn-error">
+          Eliminar Avance
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

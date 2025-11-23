@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+/* DIRECTIVAS CORE DE TAILWIND */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    background-color: #FFFFFF;
+    color: #242c34;
+}
+
+/* Aquí añadimos tus animaciones personalizadas 
+  y utilidades CSS globales que mencionaste en el reporte.
+*/
+
+/* Animación de entrada con fade (ejemplo) */
+.fadeIn {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===== ESTILOS DE BOTONES PROFESIONALES ===== */
+/* Botón Primario - Verde sólido */
+.btn-primary {
+    background-color: #2E865F !important;
+    border-color: #2E865F !important;
+    color: #FFFFFF !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #246d4d !important;
+    border-color: #246d4d !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(46, 134, 95, 0.3) !important;
+}
+
+/* Botón Ghost - Gris con borde */
+.btn-ghost {
+    background-color: transparent !important;
+    border: 1px solid #bdc4d0 !important;
+    color: #242c34 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background-color: #F5F5F5 !important;
+    border-color: #242c34 !important;
+}
+
+/* Botones de error - Rojo sólido */
+.bg-red-600 {
+    background-color: #FF0000 !important;
+    color: #FFFFFF !important;
+    transition: all 0.3s ease !important;
+}
+
+.bg-red-600:hover:not(:disabled) {
+    background-color: #cc0000 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3) !important;
+}
+
+/* Botón azul oscuro para navegación */
+.btn-info {
+    background-color: #00509e !important;
+    border-color: #00509e !important;
+    color: #FFFFFF !important;
+}
+
+.btn-info:hover:not(:disabled) {
+    background-color: #003d7a !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Scrollbar personalizado */
+/* Nota: Se recomienda usar utilidades de Tailwind si es posible, 
+         pero este es un ejemplo de cómo integrar CSS custom. */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #a0aec0;
+    /* Un gris suave */
+    border-radius: 4px;
+}

@@ -1,0 +1,41 @@
+<div class="p-6 max-w-2xl mx-auto bg-white shadow-xl rounded-lg mt-8">
+  <h1 class="text-3xl font-bold mb-4">Crear Nuevo Proyecto de Obra</h1>
+  <p class="text-gray-600 mb-6">Introduce la información básica de la obra.</p>
+
+  <!-- Usamos Template-Driven Forms (FormsModule) -->
+  <form (ngSubmit)="onSubmit(proyectoForm)" #proyectoForm="ngForm" class="space-y-4">
+    
+    <!-- Nombre de la Obra -->
+    <div class="form-control">
+      <label class="label"><span class="label-text">Nombre de la Obra</span></label>
+      <input type="text" placeholder="Ej: Torre Residencial Sol" class="input input-bordered w-full" name="nombreObra" required [(ngModel)]="proyectoDTO.nombreObra"/>
+    </div>
+
+    <!-- Ubicación -->
+    <div class="form-control">
+      <label class="label"><span class="label-text">Ubicación</span></label>
+      <input type="text" placeholder="Ej: Av. Principal 123, Ciudad" class="input input-bordered w-full" name="ubicacion" required [(ngModel)]="proyectoDTO.ubicacion"/>
+    </div>
+
+    <!-- Fecha de Inicio -->
+    <div class="form-control">
+      <label class="label"><span class="label-text">Fecha de Inicio</span></label>
+      <input type="date" class="input input-bordered w-full" name="fechaInicio" required [(ngModel)]="proyectoDTO.fechaInicio"/>
+    </div>
+
+    <!-- Mensaje de Error -->
+    <div *ngIf="errorMessage()" class="alert alert-error mt-4">
+      <span>{{ errorMessage() }}</span>
+    </div>
+
+    <!-- Botón de Envío -->
+    <div class="modal-action justify-start pt-4">
+      <button type="submit" class="btn btn-primary w-40" [disabled]="proyectoForm.invalid || isSaving()">
+        <span *ngIf="isSaving()" class="loading loading-spinner"></span>
+        {{ isSaving() ? 'Guardando...' : 'Crear Proyecto' }}
+      </button>
+      <!-- Botón de Cancelar (Regresa al Dashboard del Proyecto 2) -->
+      <button type="button" class="btn btn-ghost" [routerLink]="['/proyectos/2/dashboard']">Cancelar</button>
+    </div>
+  </form>
+</div>

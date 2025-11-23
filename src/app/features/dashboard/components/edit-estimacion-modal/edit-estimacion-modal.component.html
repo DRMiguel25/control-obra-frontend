@@ -1,0 +1,56 @@
+<!-- Modal de Edición de Estimación -->
+<dialog id="edit_estimacion_modal" open class="modal">
+  <div class="modal-box w-11/12 max-w-lg">
+
+    <h3 class="font-bold text-lg">Editar Estimación de Costo</h3>
+    <p class="py-1 text-sm text-gray-500">
+      ID: #{{ estimacion.id }} | Avance Actual: {{ estimacion.avancePorcentaje | number:'1.0-1' }}%
+    </p>
+
+    <!-- ALERTA DE CONCURRENCIA (DISEÑO CLAVE: Muestra el error 409 de la API) -->
+    <div *ngIf="concurrencyError()" class="alert alert-warning my-4">
+      <!-- Ícono de Advertencia -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.693 0 2.65-1.897 1.748-3.32L14 5.68c-.902-1.423-3.196-1.423-4.098 0L3.54 17.68c-.902 1.423.055 3.32 1.748 3.32z" />
+      </svg>
+      <div class="flex flex-col">
+        <span class="font-bold">Datos desactualizados</span>
+        <span class="text-sm">{{ concurrencyError() }}</span>
+      </div>
+    </div>
+
+    <!-- ALERTA DE ERROR DE VALIDACIÓN (Otros errores) -->
+    <div *ngIf="validationError()" class="alert alert-error my-4">
+      <span class="font-bold">Error:</span>
+      <span>{{ validationError() }}</span>
+    </div>
+
+    <!-- Formulario de Edición (PUT) -->
+    <form (ngSubmit)="onSubmit()" #editForm="ngForm">
+
+      <!-- Campo Concepto -->
+      <div class="form-control w-full my-3">
+        <label class="label"><span class="label-text text-gray-700 font-semibold">Concepto</span></label>
+        <input type="text" class="input input-bordered w-full bg-white text-gray-900 placeholder-gray-400"
+          name="concepto" required [(ngModel)]="conceptoDraft" />
+      </div>
+
+      <!-- Campo Monto Estimado -->
+      <div class="form-control w-full my-3">
+        <label class="label"><span class="label-text text-gray-700 font-semibold">Monto Estimado</span></label>
+        <input type="number" class="input input-bordered w-full bg-white text-gray-900 placeholder-gray-400"
+          name="monto" required min="0.01" [(ngModel)]="montoDraft" />
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="modal-action">
+        <button type="button" class="btn btn-ghost" (click)="close.emit()" [disabled]="isSaving()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid || isSaving()">
+          <span *ngIf="isSaving()" class="loading loading-spinner"></span>
+          {{ isSaving() ? 'Guardando...' : 'Actualizar Estimación' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>

@@ -1,0 +1,44 @@
+<div class="login-body">
+    <div class="container">
+        <div class="curved-shape"></div>
+        <div class="curved-shape2"></div>
+
+        <!-- Login Form -->
+        <div class="form-box Login">
+            <h2 class="animation" style="--D:0; --S:21">Iniciar Sesión</h2>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="input-box animation" style="--D:1; --S:22">
+                    <input type="email" formControlName="email" required>
+                    <label>Correo electrónico</label>
+                    <box-icon type='solid' name='user' color="gray"></box-icon>
+                </div>
+
+                <div class="input-box animation" style="--D:2; --S:23">
+                    <input type="password" formControlName="password" required>
+                    <label>Contraseña</label>
+                    <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
+                </div>
+
+                <div *ngIf="errorMessage()" class="error-message animation" style="--D:3; --S:24">
+                    {{ errorMessage() }}
+                </div>
+
+                <div class="input-box animation" style="--D:4; --S:25">
+                    <button class="btn" type="submit" [disabled]="loginForm.invalid || isLoading()">
+                        <span *ngIf="isLoading()">Cargando...</span>
+                        <span *ngIf="!isLoading()">Iniciar Sesión</span>
+                    </button>
+                </div>
+
+                <div class="regi-link animation" style="--D:5; --S:26">
+                    <p>¿No tienes cuenta? <br> <a routerLink="/register">Regístrate</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="info-content Login">
+            <h2 class="animation" style="--D:0; --S:20">¡BIENVENIDO DE NUEVO!</h2>
+            <p class="animation" style="--D:1; --S:21">Nos alegra tenerte con nosotros nuevamente.</p>
+        </div>
+    </div>
+</div>

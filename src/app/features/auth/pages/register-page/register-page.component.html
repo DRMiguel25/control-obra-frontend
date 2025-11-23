@@ -1,0 +1,58 @@
+<div class="register-body">
+    <div class="container">
+        <div class="curved-shape"></div>
+
+        <!-- Info Content (Left Side) -->
+        <div class="info-content">
+        </div>
+
+        <!-- Register Form (Right Side) -->
+        <div class="form-box">
+            <h2>Registrarse</h2>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="input-box"
+                    [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+                    <input type="text" formControlName="name" required>
+                    <label>Nombre</label>
+                    <box-icon type='solid' name='user' color="gray"></box-icon>
+                </div>
+
+                <div class="input-box"
+                    [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                    <input type="email" formControlName="email" required>
+                    <label>Correo Electrónico</label>
+                    <box-icon name='envelope' type='solid' color="gray"></box-icon>
+                </div>
+
+                <div class="input-box"
+                    [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                    <input type="password" formControlName="password" required>
+                    <label>Contraseña</label>
+                    <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
+                </div>
+
+                <div class="input-box"
+                    [class.error]="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">
+                    <input type="password" formControlName="confirmPassword" required>
+                    <label>Confirmar Contraseña</label>
+                    <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
+                </div>
+
+                <div *ngIf="errorMessage()" class="error-message">
+                    {{ errorMessage() }}
+                </div>
+
+                <div class="input-box">
+                    <button class="btn" type="submit" [disabled]="registerForm.invalid || isLoading()">
+                        <span *ngIf="isLoading()">Cargando...</span>
+                        <span *ngIf="!isLoading()">Registrarse</span>
+                    </button>
+                </div>
+
+                <div class="regi-link">
+                    <p>¿Ya tienes cuenta? <br> <a routerLink="/login">Iniciar Sesión</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

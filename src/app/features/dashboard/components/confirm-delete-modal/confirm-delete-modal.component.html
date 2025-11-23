@@ -1,0 +1,45 @@
+<!-- Modal de Confirmación de Eliminación -->
+<dialog id="delete_modal" open class="modal">
+  <div class="modal-box w-11/12 max-w-sm">
+    
+    <h3 class="font-bold text-lg text-red-600">Confirmar Eliminación</h3>
+    
+    <!-- Mensaje normal de confirmación (Visible si NO hay error de integridad) -->
+    <div *ngIf="!integrityError()" class="my-4">
+        <p class="text-sm">
+            ¿Está seguro que desea eliminar la Estimación: 
+            <span class="font-semibold text-gray-700">"{{ estimacion.concepto }}"</span>?
+        </p>
+        <p class="text-xs mt-2 text-gray-500">Esta acción es irreversible.</p>
+    </div>
+
+    <!-- ALERTA DE INTEGRIDAD (Visible si el DELETE regresa 400 - Tu lógica de negocio) -->
+    <div *ngIf="integrityError()" class="alert alert-error my-4 flex-col items-start text-sm">
+        <div class="flex items-center space-x-2">
+            <!-- Icono de Advertencia -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.693 0 2.65-1.897 1.748-3.32L14 5.68c-.902-1.423-3.196-1.423-4.098 0L3.54 17.68c-.902 1.423.055 3.32 1.748 3.32z"/></svg>
+            <!-- Muestra el título del error (ej: "No se puede eliminar") -->
+            <span class="font-bold">{{ integrityError().error || 'Error' }}</span>
+        </div>
+        <!-- Muestra la razón detallada (ej: "Tiene avances registrados. Elimínelos primero.") -->
+        <p class="mt-1 pl-8">{{ integrityError().razon || 'Detalle no disponible.' }}</p>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="modal-action">
+      <button type="button" class="btn btn-ghost" (click)="close.emit()" [disabled]="isDeleting()">Cerrar</button>
+      
+      <!-- El botón de eliminación solo se muestra si NO hay error de integridad -->
+      <button 
+        *ngIf="!integrityError()"
+        type="button" 
+        class="btn bg-red-600 text-white hover:bg-red-700"
+        (click)="onConfirmDelete()"
+        [disabled]="isDeleting()"
+      >
+        <span *ngIf="isDeleting()" class="loading loading-spinner"></span>
+        {{ isDeleting() ? 'Eliminando...' : 'Eliminar' }}
+      </button>
+    </div>
+  </div>
+</dialog>

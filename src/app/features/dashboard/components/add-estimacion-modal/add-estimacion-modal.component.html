@@ -1,0 +1,50 @@
+<div class="modal modal-open">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Agregar Nueva Estimación de Costo</h3>
+
+        <!-- Error General -->
+        <div *ngIf="generalError()" class="alert alert-error mb-4">
+            <span>{{ generalError() }}</span>
+        </div>
+
+        <!-- Errores de Validación -->
+        <div *ngIf="validationErrors().length > 0" class="alert alert-warning mb-4">
+            <ul>
+                <li *ngFor="let err of validationErrors()">{{ err }}</li>
+            </ul>
+        </div>
+
+        <!-- Formulario -->
+        <form (ngSubmit)="onSubmit()" #form="ngForm">
+
+            <!-- Campo: Concepto -->
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">Concepto</span>
+                </label>
+                <input type="text" name="concepto" [(ngModel)]="estimacionDTO.concepto" class="input input-bordered"
+                    placeholder="Ej: Cimentación" required />
+            </div>
+
+            <!-- Campo: Monto Estimado -->
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">Monto Estimado</span>
+                </label>
+                <input type="number" name="montoEstimado" [(ngModel)]="estimacionDTO.montoEstimado"
+                    class="input input-bordered" placeholder="50000" step="0.01" min="0" required />
+            </div>
+
+            <!-- Botones -->
+            <div class="modal-action">
+                <button type="button" class="btn btn-ghost" (click)="close.emit()" [disabled]="isSaving()">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="isSaving() || !form.valid">
+                    <span *ngIf="isSaving()" class="loading loading-spinner loading-sm"></span>
+                    {{ isSaving() ? 'Guardando...' : 'Guardar Estimación' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

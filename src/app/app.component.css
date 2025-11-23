@@ -1,0 +1,14 @@
+.app-container {
+    background-color: #FFFFFF;
+}
+
+main {
+    position: relative;
+    overflow: hidden;
+    background-color: #FFFFFF;
+    min-height: 100vh;
+}
+
+main>* {
+    width: 100%;
+}

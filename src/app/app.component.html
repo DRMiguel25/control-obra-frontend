@@ -1,0 +1,12 @@
+<div class="flex min-h-screen font-sans" style="background-color: #FFFFFF;">
+
+  <!-- 1. BARRA LATERAL (Fija): Se carga el componente del Sidebar -->
+  <app-sidebar *ngIf="showSidebar"></app-sidebar>
+
+  <!-- 2. ÁREA PRINCIPAL DE CONTENIDO (Main Content) -->
+  <main class="flex-1 p-8 overflow-x-hidden relative" [class.ml-64]="showSidebar"
+    [@routeAnimations]="getRouteAnimationData()" style="background-color: #FFFFFF;">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

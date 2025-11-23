@@ -1,0 +1,82 @@
+<div class="bg-white shadow-xl rounded-lg mt-8 p-6">
+
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-xl font-semibold">Estimaciones de Costo del Proyecto</h3>
+    <!-- Botón eliminado por solicitud del usuario -->
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table w-full table-zebra">
+      <thead>
+        <tr class="text-xs uppercase bg-gray-50 text-gray-600">
+          <th>CONCEPTO</th>
+          <th>MONTO ESTIMADO</th>
+          <th>AVANCE FÍSICO</th>
+          <th>AVANCES REGISTRADOS</th>
+          <th>ACCIÓN</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let est of estimaciones">
+          <!-- Fila principal de la estimación -->
+          <tr class="hover:bg-gray-100">
+            <td class="font-medium w-1/4 text-slate-700">{{ est.concepto }}</td>
+
+            <td>{{ est.montoEstimado | currency:'USD' }}</td>
+
+            <td class="flex items-center space-x-2 w-1/4">
+              <progress class="progress progress-primary w-40" [value]="est.avancePorcentaje" max="100">
+              </progress>
+              <span class="text-sm font-semibold">{{ est.avancePorcentaje | number:'1.0-1' }}%</span>
+            </td>
+
+            <td>
+              <span class="badge badge-info">{{ est.avances.length }} avances</span>
+            </td>
+
+            <td>
+              <div class="flex gap-2">
+                <button class="btn btn-sm bg-amber-500 text-white hover:bg-amber-600" (click)="onRegisterAvance(est)">
+                  Registrar Avance
+                </button>
+                <button class="btn btn-sm btn-error" (click)="onDeleteEstimacion(est)" title="Eliminar estimación">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Filas de avances (si existen) -->
+          <tr *ngFor="let avance of est.avances" class="bg-slate-50 border-l-4 border-blue-300">
+            <td colspan="1" class="pl-8 text-sm text-slate-600">
+              <span class="badge badge-sm badge-ghost">ID: {{ avance.id }}</span>
+              {{ avance.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}
+            </td>
+            <td class="text-sm font-semibold text-green-600">
+              ${{ avance.montoEjecutado | number: '1.2-2' }}
+            </td>
+            <td class="text-sm">
+              <span class="badge badge-success">{{ avance.porcentajeCompletado }}% completado</span>
+            </td>
+            <td></td>
+            <td>
+              <div class="flex gap-2">
+                <button class="btn btn-xs btn-warning" (click)="onEditAvance(avance)" title="Editar avance">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-xs btn-error" (click)="onDeleteAvance(avance)" title="Eliminar avance">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+
+        <tr *ngIf="!estimaciones || estimaciones.length === 0">
+          <td colspan="5" class="text-center py-4 text-gray-500">No hay estimaciones cargadas para este proyecto.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

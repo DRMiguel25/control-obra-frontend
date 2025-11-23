@@ -1,0 +1,33 @@
+<dialog id="avance_modal" open class="modal">
+  <div class="modal-box w-11/12 max-w-lg">
+    <h3 class="font-bold text-lg">Registrar Avance</h3>
+    <p class="py-1 text-sm text-gray-500">Estimación: {{ estimacion.concepto }}</p>
+    
+    <div *ngIf="validationErrors().length > 0" class="alert alert-error my-4">
+        <span>Error de Validación:</span>
+        <ul class="list-disc list-inside text-sm">
+            <li *ngFor="let error of validationErrors()">{{ error }}</li>
+        </ul>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #avanceForm="ngForm">
+      <div class="form-control w-full my-3">
+        <label class="label"><span class="label-text">Monto Ejecutado (MXN)</span></label>
+        <input type="number" class="input input-bordered w-full" name="montoEjecutado" required min="0" [(ngModel)]="avanceDTO.montoEjecutado"/>
+      </div>
+
+      <div class="form-control w-full my-3">
+        <label class="label"><span class="label-text">Porcentaje de Finalización (%)</span></label>
+        <input type="number" class="input input-bordered w-full" name="porcentajeCompletado" required min="0" max="100" [(ngModel)]="avanceDTO.porcentajeCompletado"/>
+      </div>
+
+      <div class="modal-action">
+        <button type="button" class="btn btn-ghost" (click)="close.emit()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!avanceForm.valid || isSaving()">
+          <span *ngIf="isSaving()" class="loading loading-spinner"></span>
+          {{ isSaving() ? 'Guardando...' : 'Registrar Avance' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
