@@ -37,6 +37,48 @@ import { RouterLink } from '@angular/router';
 
           <hr class="border-slate-200">
 
+          <!-- Guía de Uso Rápida -->
+          <section class="text-left space-y-6">
+            <h2 class="text-2xl font-bold text-slate-800 text-center mb-6">Guía de Uso Rápida</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Crear Proyecto -->
+              <div class="bg-blue-50 p-5 rounded-lg border-l-4 border-blue-500">
+                <h3 class="font-bold text-blue-800 mb-2 flex items-center">
+                  <i class="fas fa-plus-circle mr-2"></i> Crear Proyecto
+                </h3>
+                <p class="text-sm text-slate-700">
+                  Dirígete a la sección de "Proyectos" y haz clic en el botón <strong>"Nuevo Proyecto"</strong>. 
+                  Completa el formulario con el nombre, ubicación y fecha de inicio de la obra.
+                </p>
+              </div>
+
+              <!-- Editar Proyecto -->
+              <div class="bg-amber-50 p-5 rounded-lg border-l-4 border-amber-500">
+                <h3 class="font-bold text-amber-800 mb-2 flex items-center">
+                  <i class="fas fa-edit mr-2"></i> Editar Proyecto
+                </h3>
+                <p class="text-sm text-slate-700">
+                  En el listado de proyectos, usa el botón de <strong>"Editar"</strong> (lápiz) para modificar los detalles básicos. 
+                  Para actualizar el avance financiero, entra al Dashboard del proyecto.
+                </p>
+              </div>
+
+              <!-- Eliminar Proyecto -->
+              <div class="bg-red-50 p-5 rounded-lg border-l-4 border-red-500">
+                <h3 class="font-bold text-red-800 mb-2 flex items-center">
+                  <i class="fas fa-trash-alt mr-2"></i> Eliminar Proyecto
+                </h3>
+                <p class="text-sm text-slate-700">
+                  <strong>¡Importante!</strong> Para eliminar un proyecto, primero debes eliminar todas sus <strong>estimaciones de costo</strong> asociadas. 
+                  Esto es una medida de seguridad para proteger la integridad de los datos financieros.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <hr class="border-slate-200">
+
           <!-- Technologies -->
           <section>
             <h2 class="text-2xl font-bold text-slate-800 mb-6 text-center">Tecnologías Utilizadas</h2>

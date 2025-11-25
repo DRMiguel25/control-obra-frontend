@@ -35,6 +35,7 @@ export interface AvanceCreateDTO {
   montoEjecutado: number;
   porcentajeCompletado: number;
   costoID: number;
+  UserId: number; // Required for multi-user support
 }
 
 // DTO para crear una nueva estimación de costo
@@ -42,6 +43,7 @@ export interface EstimacionCreateDTO {
   concepto: string;
   montoEstimado: number;
   proyectoID: number;
+  UserId: number; // Required for multi-user support
 }
 
 // DTO para crear un nuevo proyecto
@@ -49,6 +51,7 @@ export interface ProyectoCreateDTO {
   nombreObra: string;
   ubicacion: string;
   fechaInicio: Date;
+  UserId: number; // Required for multi-user support
 }
 
 // DTO para actualizar un proyecto existente

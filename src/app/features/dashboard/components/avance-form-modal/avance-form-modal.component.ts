@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EstimacionCosto, AvanceCreateDTO } from '../../../../shared/interfaces/domain-models';
 import { ObraService } from '../../../../shared/services/obra.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-avance-form-modal',
@@ -14,38 +15,48 @@ import { ObraService } from '../../../../shared/services/obra.service';
 })
 export class AvanceFormModalComponent {
   private obraService = inject(ObraService);
+  private authService = inject(AuthService);
 
   @Input({ required: true }) estimacion!: EstimacionCosto;
   @Output() avanceRegistrado = new EventEmitter<void>();
-  @Output() close = new EventEmitter<void>(); 
+  @Output() close = new EventEmitter<void>();
 
-  public avanceDTO: AvanceCreateDTO = { 
-    montoEjecutado: 0, 
-    porcentajeCompletado: 0, 
-    costoID: 0 
+  public avanceDTO: AvanceCreateDTO = {
+    montoEjecutado: 0,
+    porcentajeCompletado: 0,
+    costoID: 0,
+    UserId: 0
   };
-  
+
   public isSaving = signal<boolean>(false);
   public validationErrors = signal<string[]>([]);
   public generalError = signal<string | null>(null);
 
   constructor() {
-    setTimeout(() => { 
-        this.avanceDTO.costoID = this.estimacion.id;
+    setTimeout(() => {
+      this.avanceDTO.costoID = this.estimacion.id;
     });
   }
 
   onSubmit(): void {
+    // Get userId from JWT token
+    const userId = this.authService.getCurrentUserId();
+    if (!userId) {
+      this.generalError.set('No se pudo obtener el ID de usuario. Por favor, inicie sesión nuevamente.');
+      return;
+    }
+
     if (this.isSaving()) return;
 
+    this.avanceDTO.UserId = Number(userId);
     this.isSaving.set(true);
     this.validationErrors.set([]);
     this.generalError.set(null);
 
     this.obraService.postAvanceObra(this.avanceDTO).subscribe({
       next: () => {
-        this.avanceRegistrado.emit(); 
-        this.close.emit(); 
+        this.avanceRegistrado.emit();
+        this.close.emit();
       },
       error: (error) => {
         this.isSaving.set(false);

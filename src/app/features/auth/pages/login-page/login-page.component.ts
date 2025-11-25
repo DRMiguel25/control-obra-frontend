@@ -46,11 +46,11 @@ export class LoginPageComponent {
                 console.error('Login error:', err);
 
                 if (err.status === 0) {
-                    this.errorMessage.set('❌ No se puede conectar al servidor.');
+                    this.errorMessage.set('No se puede conectar al servidor.');
                 } else if (err.status === 401) {
-                    this.errorMessage.set('❌ Usuario o contraseña incorrectos');
+                    this.errorMessage.set('Usuario o contraseña incorrectos');
                 } else if (err.status === 404) {
-                    this.errorMessage.set('❌ Usuario no encontrado');
+                    this.errorMessage.set('Usuario no encontrado');
                 } else if (err.status === 500) {
                     this.errorMessage.set('Error del servidor.');
                 } else {

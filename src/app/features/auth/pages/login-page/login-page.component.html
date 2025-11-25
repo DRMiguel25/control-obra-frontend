@@ -19,8 +19,9 @@
                     <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
                 </div>
 
-                <div *ngIf="errorMessage()" class="error-message animation" style="--D:3; --S:24">
-                    {{ errorMessage() }}
+                <div *ngIf="errorMessage()" class="error-message animation flex items-center gap-2 text-red-500"
+                    style="--D:3; --S:24">
+                    <i class="fa-solid fa-circle-exclamation"></i> {{ errorMessage() }}
                 </div>
 
                 <div class="input-box animation" style="--D:4; --S:25">

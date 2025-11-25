@@ -1,6 +1,26 @@
 <div class="p-6">
+  <!-- DEBUG: AI Modal Check -->
+  <div *ngIf="isAiModalOpen()" class="bg-red-500 text-white p-4 font-bold z-50 fixed top-0 left-0 w-full text-center">
+    DEBUG: AI MODAL SHOULD BE VISIBLE
+  </div>
+
+  <!-- MODAL 6: REPORTE IA (Moved to top) -->
+  <app-ai-report-modal *ngIf="isAiModalOpen()" [proyecto]="proyecto()!" [desviacion]="desviacion()!"
+    (close)="isAiModalOpen.set(false)" />
+
   <!-- Título y Estado de Carga -->
-  <h1 class="text-3xl font-bold mb-6">Dashboard Operativo - {{ proyecto()?.nombre || 'Cargando Proyecto...' }}</h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Dashboard Operativo - {{ proyecto()?.nombre || 'Cargando Proyecto...' }}</h1>
+    <button (click)="openAiModal()" class="btn btn-primary gap-2 shadow-lg animate-pulse hover:animate-none"
+      *ngIf="proyecto() && desviacion()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+        <path fill-rule="evenodd"
+          d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813a3.75 3.75 0 002.576-2.576l.813-2.846A.75.75 0 019 4.5zM6.97 11.03a.75.75 0 111.06-1.06l.75.75a.75.75 0 01-1.06 1.06l-.75-.75z"
+          clip-rule="evenodd" />
+      </svg>
+      Analizar con IA
+    </button>
+  </div>
 
   <!-- PANTALLA DE CARGA (SKELETON) -->
   <div *ngIf="loading(); else content" class="animate-pulse space-y-6">
@@ -69,6 +89,21 @@
         subtitle="Proyección Actual" />
     </div>
 
+    <!-- BARRA DE PROGRESO DEL PROYECTO -->
+    <div class="my-8 p-6 bg-base-100 shadow-lg rounded-box">
+      <h2 class="text-2xl font-bold mb-4">Progreso del Proyecto</h2>
+      <ul class="steps steps-vertical lg:steps-horizontal w-full">
+        <li class="step step-primary">Inicio del Proyecto</li>
+        <li class="step" [class.step-primary]="getProgresoTotal() >= 25">25% Completado</li>
+        <li class="step" [class.step-primary]="getProgresoTotal() >= 50">50% Completado</li>
+        <li class="step" [class.step-primary]="getProgresoTotal() >= 75">75% Completado</li>
+        <li class="step" [class.step-primary]="getProgresoTotal() >= 100">Proyecto Completado</li>
+      </ul>
+      <div class="mt-4 text-center">
+        <p class="text-xl font-semibold">Progreso Total: {{ getProgresoTotal() }}%</p>
+      </div>
+    </div>
+
     <!-- Botón para Agregar Nueva Estimación -->
     <div class="my-6">
       <button (click)="handleAgregarEstimacion()" class="btn btn-success gap-2">
@@ -108,6 +143,10 @@
   <app-confirm-delete-modal *ngIf="isDeleteModalOpen() && selectedEstimacion()" [estimacion]="selectedEstimacion()!"
     (close)="isDeleteModalOpen.set(false)" (estimacionEliminada)="handleRecargaDatos()" />
 
+  <!-- MODAL 5: EDITAR AVANCE (PUT) -->
+  <app-edit-avance-modal *ngIf="isEditAvanceModalOpen() && selectedAvance()" [avance]="selectedAvance()!"
+    (close)="isEditAvanceModalOpen.set(false)" (avanceActualizado)="handleRecargaDatos()" />
+
   <!-- MODAL 4: CONFIRMAR ELIMINACIÓN DE AVANCE (DELETE) -->
   <div *ngIf="isDeleteAvanceModalOpen()" class="modal modal-open">
     <div class="modal-box max-w-md">
@@ -146,6 +185,10 @@
         <button (click)="confirmarEliminacionAvance()" class="btn btn-error">
           Eliminar Avance
         </button>
+        <!-- MODAL 6: REPORTE IA -->
+        <app-ai-report-modal *ngIf="isAiModalOpen()" [proyecto]="proyecto()!" [desviacion]="desviacion()!"
+          (close)="isAiModalOpen.set(false)" />
+
       </div>
     </div>
   </div>

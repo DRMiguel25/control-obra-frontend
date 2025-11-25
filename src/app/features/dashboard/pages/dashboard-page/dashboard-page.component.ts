@@ -18,6 +18,8 @@ import { AvanceFormModalComponent } from '../../components/avance-form-modal/ava
 import { EditEstimacionModalComponent } from '../../components/edit-estimacion-modal/edit-estimacion-modal.component';
 import { ConfirmDeleteModalComponent } from '../../components/confirm-delete-modal/confirm-delete-modal.component';
 import { AddEstimacionModalComponent } from '../../components/add-estimacion-modal/add-estimacion-modal.component';
+import { EditAvanceModalComponent } from '../../components/edit-avance-modal/edit-avance-modal.component';
+import { AiReportModalComponent } from '../../components/ai-report-modal/ai-report-modal.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -30,6 +32,8 @@ import { AddEstimacionModalComponent } from '../../components/add-estimacion-mod
     EditEstimacionModalComponent,
     ConfirmDeleteModalComponent,
     AddEstimacionModalComponent,
+    EditAvanceModalComponent,
+    AiReportModalComponent,
   ],
   templateUrl: './dashboard-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +57,19 @@ export class DashboardPageComponent implements OnInit {
 
   // NUEVOS: para eliminar/editar avances
   public isDeleteAvanceModalOpen = signal<boolean>(false);
+  public isEditAvanceModalOpen = signal<boolean>(false);
+  public isAiModalOpen = signal<boolean>(false);
+
+  openAiModal() {
+    console.log('Opening AI Modal');
+    console.log('Current state:', {
+      isAiModalOpen: this.isAiModalOpen(),
+      proyecto: this.proyecto(),
+      desviacion: this.desviacion()
+    });
+    this.isAiModalOpen.set(true);
+    console.log('New state isAiModalOpen:', this.isAiModalOpen());
+  }
   public selectedAvance = signal<AvanceObra | null>(null);
   public deleteAvanceError = signal<string | null>(null);
 
@@ -112,6 +129,20 @@ export class DashboardPageComponent implements OnInit {
   }
 
   /**
+   * Calculate overall project progress based on all estimations
+   * @returns Percentage of completion (0-100)
+   */
+  getProgresoTotal(): number {
+    const estimaciones = this.proyecto()?.estimaciones;
+    if (!estimaciones || estimaciones.length === 0) {
+      return 0;
+    }
+
+    const totalProgreso = estimaciones.reduce((sum, est) => sum + est.avancePorcentaje, 0);
+    return Math.round(totalProgreso / estimaciones.length);
+  }
+
+  /**
    * HANDLERS DE INTERACCIÓN (Apertura de Modales)
    */
   handleRegistrarAvance(estimacion: EstimacionCosto): void {
@@ -136,8 +167,7 @@ export class DashboardPageComponent implements OnInit {
   // NUEVOS HANDLERS para avances
   handleEditarAvance(avance: AvanceObra): void {
     this.selectedAvance.set(avance);
-    // TODO: Crear modal de edición de avance si es necesario
-    console.log('Editar avance:', avance);
+    this.isEditAvanceModalOpen.set(true);
   }
 
   handleEliminarAvance(avance: AvanceObra): void {
@@ -182,6 +212,8 @@ export class DashboardPageComponent implements OnInit {
     this.isDeleteModalOpen.set(false);
     this.isAddEstimacionModalOpen.set(false);
     this.isDeleteAvanceModalOpen.set(false);
+    this.isEditAvanceModalOpen.set(false);
+    this.isAiModalOpen.set(false);
     this.selectedEstimacion.set(null);
     this.selectedAvance.set(null);
 

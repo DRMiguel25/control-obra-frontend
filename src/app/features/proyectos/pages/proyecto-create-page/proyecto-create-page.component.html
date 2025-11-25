@@ -4,23 +4,26 @@
 
   <!-- Usamos Template-Driven Forms (FormsModule) -->
   <form (ngSubmit)="onSubmit(proyectoForm)" #proyectoForm="ngForm" class="space-y-4">
-    
+
     <!-- Nombre de la Obra -->
     <div class="form-control">
       <label class="label"><span class="label-text">Nombre de la Obra</span></label>
-      <input type="text" placeholder="Ej: Torre Residencial Sol" class="input input-bordered w-full" name="nombreObra" required [(ngModel)]="proyectoDTO.nombreObra"/>
+      <input type="text" placeholder="Ej: Torre Residencial Sol" class="input input-bordered w-full" name="nombreObra"
+        required [(ngModel)]="proyectoDTO.nombreObra" />
     </div>
 
     <!-- Ubicación -->
     <div class="form-control">
       <label class="label"><span class="label-text">Ubicación</span></label>
-      <input type="text" placeholder="Ej: Av. Principal 123, Ciudad" class="input input-bordered w-full" name="ubicacion" required [(ngModel)]="proyectoDTO.ubicacion"/>
+      <input type="text" placeholder="Ej: Av. Principal 123, Ciudad" class="input input-bordered w-full"
+        name="ubicacion" required [(ngModel)]="proyectoDTO.ubicacion" />
     </div>
 
     <!-- Fecha de Inicio -->
     <div class="form-control">
       <label class="label"><span class="label-text">Fecha de Inicio</span></label>
-      <input type="date" class="input input-bordered w-full" name="fechaInicio" required [(ngModel)]="proyectoDTO.fechaInicio"/>
+      <input type="date" class="input input-bordered w-full" name="fechaInicio" required
+        [(ngModel)]="proyectoDTO.fechaInicio" />
     </div>
 
     <!-- Mensaje de Error -->

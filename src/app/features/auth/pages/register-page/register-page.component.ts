@@ -55,7 +55,7 @@ export class RegisterPageComponent {
 
                 // Provide detailed error messages
                 if (err.status === 0) {
-                    this.errorMessage.set('❌ No se puede conectar al servidor. Verifica que el backend esté corriendo en http://localhost:5000');
+                    this.errorMessage.set('No se puede conectar al servidor. Verifica que el backend esté corriendo en http://localhost:5000');
                 } else if (err.status === 400) {
                     this.errorMessage.set('Error: ' + (err.error?.message || 'Datos inválidos'));
                 } else if (err.status === 409) {

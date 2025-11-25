@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EstimacionCreateDTO } from '../../../../shared/interfaces/domain-models';
 import { ObraService } from '../../../../shared/services/obra.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
     selector: 'app-add-estimacion-modal',
@@ -13,6 +14,7 @@ import { ObraService } from '../../../../shared/services/obra.service';
 })
 export class AddEstimacionModalComponent implements OnInit {
     private obraService = inject(ObraService);
+    private authService = inject(AuthService);
 
     @Input({ required: true }) proyectoId!: number;
     @Output() estimacionCreada = new EventEmitter<void>();
@@ -21,7 +23,8 @@ export class AddEstimacionModalComponent implements OnInit {
     public estimacionDTO: EstimacionCreateDTO = {
         concepto: '',
         montoEstimado: 0,
-        proyectoID: 0
+        proyectoID: 0,
+        UserId: 0
     };
 
     public isSaving = signal<boolean>(false);
@@ -34,8 +37,16 @@ export class AddEstimacionModalComponent implements OnInit {
     }
 
     onSubmit(): void {
+        // Get userId from JWT token
+        const userId = this.authService.getCurrentUserId();
+        if (!userId) {
+            this.generalError.set('No se pudo obtener el ID de usuario. Por favor, inicie sesión nuevamente.');
+            return;
+        }
+
         // Convert numeric fields
         this.estimacionDTO.montoEstimado = Number(this.estimacionDTO.montoEstimado);
+        this.estimacionDTO.UserId = Number(userId);
         console.log('Enviando estimación DTO:', this.estimacionDTO);
 
         // Basic client‑side validation to avoid sending incomplete data
