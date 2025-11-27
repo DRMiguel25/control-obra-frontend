@@ -8,7 +8,6 @@ import { Proyecto, ResultadoDesviacion } from '../../shared/interfaces/domain-mo
 })
 export class GeminiService {
     private http = inject(HttpClient);
-    private apiKey = 'AIzaSyBsyYxkH9Qh_vQYgr35YwZL5xO55MGaTV4';
     private apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
     analyzeProject(proyecto: Proyecto, desviacion: ResultadoDesviacion): Observable<string> {
