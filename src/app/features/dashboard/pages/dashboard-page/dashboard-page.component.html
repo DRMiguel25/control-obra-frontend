@@ -1,8 +1,5 @@
 <div class="p-6">
-  <!-- DEBUG: AI Modal Check -->
-  <div *ngIf="isAiModalOpen()" class="bg-red-500 text-white p-4 font-bold z-50 fixed top-0 left-0 w-full text-center">
-    DEBUG: AI MODAL SHOULD BE VISIBLE
-  </div>
+
 
   <!-- MODAL 6: REPORTE IA (Moved to top) -->
   <app-ai-report-modal *ngIf="isAiModalOpen()" [proyecto]="proyecto()!" [desviacion]="desviacion()!"
@@ -11,15 +8,30 @@
   <!-- Título y Estado de Carga -->
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Dashboard Operativo - {{ proyecto()?.nombre || 'Cargando Proyecto...' }}</h1>
-    <button (click)="openAiModal()" class="btn btn-primary gap-2 shadow-lg animate-pulse hover:animate-none"
-      *ngIf="proyecto() && desviacion()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-        <path fill-rule="evenodd"
-          d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813a3.75 3.75 0 002.576-2.576l.813-2.846A.75.75 0 019 4.5zM6.97 11.03a.75.75 0 111.06-1.06l.75.75a.75.75 0 01-1.06 1.06l-.75-.75z"
-          clip-rule="evenodd" />
-      </svg>
-      Analizar con IA
-    </button>
+    <!-- Custom Tooltip Wrapper -->
+    <div class="relative inline-block group">
+      <!-- Tooltip Content (User's Style) -->
+      <div
+        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 w-max pointer-events-none"
+        *ngIf="!canAnalyze()">
+        <div
+          class="animate-bounce text-orange-500 -rotate-6 text-lg font-black bg-white px-3 py-1 rounded-lg shadow-xl border-2 border-orange-500">
+          ¡Necesitas +3 avacnes!
+        </div>
+      </div>
+
+      <!-- Button -->
+      <button (click)="openAiModal()" [disabled]="!canAnalyze()"
+        class="btn btn-primary gap-3 shadow-lg hover:animate-none px-6" [class.animate-pulse]="canAnalyze()"
+        *ngIf="proyecto() && desviacion()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+          <path fill-rule="evenodd"
+            d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813a3.75 3.75 0 002.576-2.576l.813-2.846A.75.75 0 019 4.5zM6.97 11.03a.75.75 0 111.06-1.06l.75.75a.75.75 0 01-1.06 1.06l-.75-.75z"
+            clip-rule="evenodd" />
+        </svg>
+        Analizar con IA
+      </button>
+    </div>
   </div>
 
   <!-- PANTALLA DE CARGA (SKELETON) -->
@@ -62,7 +74,7 @@
           <h3 class="font-bold">Error</h3>
           <div class="text-xs">{{ error() }}</div>
         </div>
-        <button class="btn btn-sm btn-ghost" (click)="retry()">Reintentar</button>
+        <button class="btn btn-sm btn-ghost px-4" (click)="retry()">Reintentar</button>
       </div>
     </div>
   </ng-template>
@@ -106,7 +118,7 @@
 
     <!-- Botón para Agregar Nueva Estimación -->
     <div class="my-6">
-      <button (click)="handleAgregarEstimacion()" class="btn btn-success gap-2">
+      <button (click)="handleAgregarEstimacion()" class="btn btn-success gap-3 px-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd"
             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"

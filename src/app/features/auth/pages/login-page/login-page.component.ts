@@ -47,6 +47,13 @@ export class LoginPageComponent {
 
                 if (err.status === 0) {
                     this.errorMessage.set('No se puede conectar al servidor.');
+                } else if (err.status === 400) {
+                    // El backend devuelve mensajes como "User not found." o "Wrong password." en el cuerpo
+                    if (typeof err.error === 'string') {
+                        this.errorMessage.set(err.error);
+                    } else {
+                        this.errorMessage.set('Datos inválidos o usuario no encontrado.');
+                    }
                 } else if (err.status === 401) {
                     this.errorMessage.set('Usuario o contraseña incorrectos');
                 } else if (err.status === 404) {

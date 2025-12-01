@@ -61,6 +61,8 @@ export class DashboardPageComponent implements OnInit {
   public isAiModalOpen = signal<boolean>(false);
 
   openAiModal() {
+    if (!this.canAnalyze()) return;
+
     console.log('Opening AI Modal');
     console.log('Current state:', {
       isAiModalOpen: this.isAiModalOpen(),
@@ -86,6 +88,15 @@ export class DashboardPageComponent implements OnInit {
 
   public desviacionEsPositiva = computed(() => {
     return (this.desviacion()?.desviacionPorcentaje ?? 0) > 0;
+  });
+
+  public canAnalyze = computed(() => {
+    const estimaciones = this.proyecto()?.estimaciones;
+    if (!estimaciones) return false;
+
+    // Count total advances across all estimations
+    const totalAvances = estimaciones.reduce((count, est) => count + (est.avances?.length || 0), 0);
+    return totalAvances > 3;
   });
 
   ngOnInit(): void {

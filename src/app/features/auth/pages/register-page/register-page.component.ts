@@ -46,8 +46,7 @@ export class RegisterPageComponent {
             next: (response) => {
                 this.isLoading.set(false);
                 console.log('Registro exitoso:', response);
-                alert('Usuario registrado correctamente. Ahora puedes iniciar sesión.');
-                this.router.navigate(['/login']);
+                this.router.navigate(['/proyectos']);
             },
             error: (err) => {
                 this.isLoading.set(false);

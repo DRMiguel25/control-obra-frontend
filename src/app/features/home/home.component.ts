@@ -121,8 +121,8 @@ import { RouterLink } from '@angular/router';
 
           <!-- Action Button -->
           <div class="text-center mt-8">
-            <a routerLink="/proyectos/2/dashboard" class="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-              <span>Ir al Dashboard</span>
+            <a routerLink="/proyectos" class="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <span>Ir a los  Proyectos de Obra</span>
               <i class="fas fa-arrow-right ml-2"></i>
             </a>
           </div>

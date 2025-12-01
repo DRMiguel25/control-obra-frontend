@@ -43,7 +43,7 @@
                 <h3 class="font-bold">Error</h3>
                 <div class="text-xs">{{ error() }}</div>
             </div>
-            <button class="btn btn-sm" (click)="navegarALista()">Volver a la lista</button>
+            <button class="btn btn-sm px-4" (click)="navegarALista()">Volver a la lista</button>
         </div>
 
         <!-- Project Detail Content -->
@@ -51,7 +51,7 @@
             <!-- Header con navegación -->
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <button (click)="navegarALista()" class="btn btn-ghost gap-2 mb-4">
+                    <button (click)="navegarALista()" class="btn btn-info gap-3 mb-4 px-4 shadow-md text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
@@ -62,7 +62,7 @@
                     <h1 class="text-4xl font-bold text-slate-800">{{ proyecto()?.nombre }}</h1>
                     <p class="text-slate-600 mt-2">Detalle completo del proyecto</p>
                 </div>
-                <button (click)="navegarADashboard()" class="btn btn-primary gap-2">
+                <button (click)="navegarADashboard()" class="btn btn-primary gap-3 px-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

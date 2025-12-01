@@ -8,7 +8,7 @@ import { Proyecto, ResultadoDesviacion } from '../../shared/interfaces/domain-mo
 })
 export class GeminiService {
     private http = inject(HttpClient);
-    private apiKey = 'AIzaSyBsyYxkH9Qh_vQYgr35YwZL5xO55MGaTV4';
+    private apiKey = 'Aqui va tu apikey';
     private apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
     analyzeProject(proyecto: Proyecto, desviacion: ResultadoDesviacion): Observable<string> {
@@ -27,11 +27,24 @@ export class GeminiService {
 
         return this.http.post<any>(this.apiUrl, body, { headers }).pipe(
             map(response => {
+                // 1. Validar si la respuesta fue bloqueada por seguridad
+                if (response.promptFeedback?.blockReason) {
+                    throw new Error(`La IA bloqueó la solicitud por seguridad: ${response.promptFeedback.blockReason}`);
+                }
+
+                // 2. Validar si hay candidatos
+                if (!response.candidates || response.candidates.length === 0) {
+                    throw new Error('La IA no generó ninguna respuesta. Intenta reformular los datos del proyecto.');
+                }
+
+                // 3. Intentar extraer el texto
                 try {
-                    return response.candidates[0].content.parts[0].text;
+                    const text = response.candidates[0].content?.parts?.[0]?.text;
+                    if (!text) throw new Error('Respuesta vacía.');
+                    return text;
                 } catch (e) {
                     console.error('Error parsing Gemini response:', e);
-                    return 'Error al procesar la respuesta de la IA.';
+                    throw new Error('Error al procesar el formato de respuesta de la IA.');
                 }
             })
         );

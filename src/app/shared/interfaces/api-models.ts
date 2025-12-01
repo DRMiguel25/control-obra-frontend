@@ -12,12 +12,13 @@ export interface ProyectoApi {
 export interface EstimacionCostoApi {
   costoID: number;
   concepto: string;
-  montoEstimado: number; 
+  montoEstimado: number;
   proyectoID: number;
   rowVersion: number[] | null; // Usado para la Concurrencia Optimista (Timestamp)
   avances: AvanceObraApi[] | null;
 }
 
+// Mapea AvanceObra.cs
 // Mapea AvanceObra.cs
 export interface AvanceObraApi {
   avanceID: number;
@@ -25,4 +26,12 @@ export interface AvanceObraApi {
   porcentajeCompletado: number;
   fechaRegistro: string; // string, pues la API lo envía así
   costoID: number;
+  fotos?: AvanceFotoApi[];
+}
+
+export interface AvanceFotoApi {
+  id: number;
+  url: string;
+  orientacion: string;
+  avanceObraId: number;
 }

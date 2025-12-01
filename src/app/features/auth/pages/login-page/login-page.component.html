@@ -8,13 +8,13 @@
             <h2 class="animation" style="--D:0; --S:21">Iniciar Sesión</h2>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="input-box animation" style="--D:1; --S:22">
-                    <input type="email" formControlName="email" required>
+                    <input type="email" formControlName="email" required placeholder=" ">
                     <label>Correo electrónico</label>
                     <box-icon type='solid' name='user' color="gray"></box-icon>
                 </div>
 
                 <div class="input-box animation" style="--D:2; --S:23">
-                    <input type="password" formControlName="password" required>
+                    <input type="password" formControlName="password" required placeholder=" ">
                     <label>Contraseña</label>
                     <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
                 </div>

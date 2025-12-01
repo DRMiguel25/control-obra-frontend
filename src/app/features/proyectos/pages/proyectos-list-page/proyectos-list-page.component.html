@@ -76,7 +76,7 @@
         <div *ngIf="!loading() && !error()">
             <!-- New Project Button -->
             <div class="mb-6">
-                <button (click)="navegarANuevoProyecto()" class="btn btn-primary gap-2">
+                <button (click)="navegarANuevoProyecto()" class="btn btn-primary gap-2 px-6">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd"
                             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -117,8 +117,8 @@
                             </p>
                         </div>
 
-                        <div class="card-actions justify-end mt-4 gap-2">
-                            <button (click)="navegarADashboard(proyecto.id)" class="btn btn-sm btn-primary">
+                        <div class="card-actions justify-end mt-4 gap-4">
+                            <button (click)="navegarADashboard(proyecto.id)" class="btn btn-sm btn-primary px-6">
                                 Dashboard
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
                                     fill="currentColor">
@@ -127,7 +127,7 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </button>
-                            <button (click)="navegarADetalle(proyecto.id)" class="btn btn-sm btn-info">
+                            <button (click)="navegarADetalle(proyecto.id)" class="btn btn-sm btn-info px-6">
                                 Detalle
                             </button>
                             <button (click)="handleEliminarProyecto(proyecto)" class="btn btn-sm btn-error">
@@ -152,7 +152,7 @@
                 </svg>
                 <h2 class="text-2xl font-bold text-base-content mb-2">No hay proyectos</h2>
                 <p class="text-base-content/70 mb-6">Comienza creando tu primer proyecto de obra</p>
-                <button (click)="navegarANuevoProyecto()" class="btn btn-primary">
+                <button (click)="navegarANuevoProyecto()" class="btn btn-primary px-6">
                     Crear Primer Proyecto
                 </button>
             </div>

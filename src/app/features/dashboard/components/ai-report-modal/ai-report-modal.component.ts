@@ -28,10 +28,18 @@ import { Proyecto, ResultadoDesviacion } from '../../../../shared/interfaces/dom
             </div>
           </div>
 
-          <!-- Error State -->
+          <!-- Error State (Dashboard Style) -->
           <div *ngIf="error()" class="alert alert-error shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>{{ error() }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h3 class="font-bold">Error</h3>
+              <div class="text-xs">{{ error() }}</div>
+            </div>
+            <button class="btn btn-sm btn-ghost" (click)="retry()">Reintentar</button>
           </div>
 
           <!-- Report Content -->
@@ -62,15 +70,51 @@ export class AiReportModalComponent implements OnInit {
   report = signal<string | null>(null);
 
   ngOnInit() {
-    console.log('AiReportModalComponent initialized');
+    this.analyze();
+  }
+
+  retry() {
+    this.analyze();
+  }
+
+  analyze() {
+    this.loading.set(true);
+    this.error.set(null);
+    this.report.set(null);
+
+    console.log('AiReportModalComponent analyzing...');
     this.geminiService.analyzeProject(this.proyecto, this.desviacion).subscribe({
       next: (text) => {
         this.report.set(text);
         this.loading.set(false);
       },
-      error: (err) => {
-        console.error(err);
-        this.error.set('No se pudo generar el reporte. Intenta más tarde.');
+      error: (err: any) => {
+        console.error('Gemini API Error:', err);
+        let errorMessage = 'No se pudo generar el reporte. Intenta más tarde.';
+
+        // 1. Errores lanzados manualmente (Error)
+        if (err instanceof Error) {
+          errorMessage = err.message;
+        }
+        // 2. Errores HTTP (HttpErrorResponse)
+        else if (err.status) {
+          if (err.status === 400) {
+            errorMessage = 'Solicitud inválida. Verifica los datos del proyecto (ej. caracteres extraños).';
+          } else if (err.status === 401 || err.status === 403) {
+            errorMessage = 'Error de autorización con la IA. Contacta soporte.';
+          } else if (err.status === 429) {
+            errorMessage = 'Límite de uso excedido. Intenta en unos minutos.';
+          } else if (err.status === 500) {
+            errorMessage = 'Error del servidor de IA. Intenta más tarde.';
+          }
+
+          // Mensaje extra del backend si existe
+          if (err.error?.error?.message) {
+            errorMessage += ` (${err.error.error.message})`;
+          }
+        }
+
+        this.error.set(errorMessage);
         this.loading.set(false);
       }
     });

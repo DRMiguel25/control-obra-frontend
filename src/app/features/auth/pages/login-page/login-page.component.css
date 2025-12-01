@@ -87,7 +87,7 @@
 }
 
 .input-box input:focus~label,
-.input-box input:valid~label {
+.input-box input:not(:placeholder-shown)~label {
     top: -5px;
     color: #00509e;
 }
@@ -102,7 +102,7 @@
 }
 
 .input-box input:focus~box-icon,
-.input-box input:valid~box-icon {
+.input-box input:not(:placeholder-shown)~box-icon {
     color: #00509e;
 }
 

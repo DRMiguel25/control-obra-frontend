@@ -7,6 +7,8 @@ import { ProyectoCreateDTO } from '../../../../shared/interfaces/domain-models';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
+
+
 @Component({
   selector: 'app-proyecto-create-page',
   standalone: true,

@@ -2,23 +2,43 @@
   <div class="modal-box w-11/12 max-w-lg">
     <h3 class="font-bold text-lg">Registrar Avance</h3>
     <p class="py-1 text-sm text-gray-500">Estimación: {{ estimacion.concepto }}</p>
-    
+
     <div *ngIf="validationErrors().length > 0" class="alert alert-error my-4">
-        <span>Error de Validación:</span>
-        <ul class="list-disc list-inside text-sm">
-            <li *ngFor="let error of validationErrors()">{{ error }}</li>
-        </ul>
+      <span>Error de Validación:</span>
+      <ul class="list-disc list-inside text-sm">
+        <li *ngFor="let error of validationErrors()">{{ error }}</li>
+      </ul>
     </div>
 
     <form (ngSubmit)="onSubmit()" #avanceForm="ngForm">
       <div class="form-control w-full my-3">
         <label class="label"><span class="label-text">Monto Ejecutado (MXN)</span></label>
-        <input type="number" class="input input-bordered w-full" name="montoEjecutado" required min="0" [(ngModel)]="avanceDTO.montoEjecutado"/>
+        <input type="number" class="input input-bordered w-full" name="montoEjecutado" required min="0"
+          [(ngModel)]="avanceDTO.montoEjecutado" />
       </div>
 
       <div class="form-control w-full my-3">
         <label class="label"><span class="label-text">Porcentaje de Finalización (%)</span></label>
-        <input type="number" class="input input-bordered w-full" name="porcentajeCompletado" required min="0" max="100" [(ngModel)]="avanceDTO.porcentajeCompletado"/>
+        <input type="number" class="input input-bordered w-full" name="porcentajeCompletado" required min="0" max="100"
+          [(ngModel)]="avanceDTO.porcentajeCompletado" />
+      </div>
+
+      <!-- File Input -->
+      <div class="form-control w-full my-3">
+        <label class="label"><span class="label-text">Evidencias (Fotos) - Máx 5, 8MB c/u</span></label>
+        <input type="file" class="file-input file-input-bordered w-full" multiple
+          accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)"
+          [disabled]="selectedFiles.length >= 5" />
+      </div>
+
+      <!-- Preview -->
+      <div class="grid grid-cols-5 gap-2 mt-2" *ngIf="filePreviewUrls.length > 0">
+        <div *ngFor="let url of filePreviewUrls; let i = index" class="relative group">
+          <img [src]="url" class="w-full h-16 object-cover rounded border" />
+          <button type="button"
+            class="btn btn-xs btn-circle btn-error absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+            (click)="removeFile(i)">✕</button>
+        </div>
       </div>
 
       <div class="modal-action">

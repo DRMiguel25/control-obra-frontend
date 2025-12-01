@@ -12,28 +12,28 @@
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                 <div class="input-box"
                     [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
-                    <input type="text" formControlName="name" required>
+                    <input type="text" formControlName="name" required placeholder=" ">
                     <label>Nombre</label>
                     <box-icon type='solid' name='user' color="gray"></box-icon>
                 </div>
 
                 <div class="input-box"
                     [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-                    <input type="email" formControlName="email" required>
+                    <input type="email" formControlName="email" required placeholder=" ">
                     <label>Correo Electrónico</label>
                     <box-icon name='envelope' type='solid' color="gray"></box-icon>
                 </div>
 
                 <div class="input-box"
                     [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-                    <input type="password" formControlName="password" required>
+                    <input type="password" formControlName="password" required placeholder=" ">
                     <label>Contraseña</label>
                     <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
                 </div>
 
                 <div class="input-box"
                     [class.error]="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">
-                    <input type="password" formControlName="confirmPassword" required>
+                    <input type="password" formControlName="confirmPassword" required placeholder=" ">
                     <label>Confirmar Contraseña</label>
                     <box-icon name='lock-alt' type='solid' color="gray"></box-icon>
                 </div>

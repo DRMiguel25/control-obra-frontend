@@ -28,6 +28,14 @@ export interface AvanceObra {
   porcentajeCompletado: number;
   fechaRegistro: Date; // Usamos Date de TypeScript
   costoId: number;
+  fotos?: AvanceFoto[];
+}
+
+export interface AvanceFoto {
+  id: number;
+  url: string;
+  orientacion: string;
+  avanceObraId: number;
 }
 
 // DTO para enviar datos a POST /api/Avances

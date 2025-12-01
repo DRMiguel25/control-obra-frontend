@@ -1,11 +1,23 @@
+<style>
+    .grayscale-select {
+        filter: grayscale(1);
+        background-color: #ececec;
+        color: #333;
+    }
+
+    .grayscale-select:focus {
+        filter: none;
+    }
+</style>
+
 <div class="min-h-screen bg-base-200 p-8">
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-4xl font-bold text-base-content mb-2">📊 Análisis de Riesgo Financiero</h1>
-            <p class="text-base-content/70">Evaluación del riesgo de desviación presupuestal basado en el método de
-                Valor
-                Ganado (EAC)</p>
+            <h1 class="text-4xl font-bold text-base-content mb-2"> Análisis de Riesgo Financiero</h1>
+            <p class="text-base-content/70">
+                Evaluación del riesgo de desviación presupuestal basado en el método de Valor Ganado (EAC)
+            </p>
         </div>
 
         <!-- Selector de Proyecto -->
@@ -15,7 +27,7 @@
 
                 <!-- Loading Proyectos -->
                 <div *ngIf="loadingProyectos()" class="flex justify-center py-4">
-                    <span class="loading loading-spinner loading-md"></span>
+                    <span class="loading loading-spinner loading-md text-success"></span>
                 </div>
 
                 <!-- Dropdown -->
@@ -23,8 +35,8 @@
                     <label class="label">
                         <span class="label-text font-semibold">Proyecto:</span>
                     </label>
-                    <select class="select select-bordered" [(ngModel)]="proyectoSeleccionado"
-                        (ngModelChange)="onProyectoSeleccionado($event)">
+                    <select class="select select-bordered border-slate-400 w-full text-base shadow-md grayscale-select"
+                        [(ngModel)]="proyectoSeleccionado" (ngModelChange)="onProyectoSeleccionado($event)">
                         <option [ngValue]="null" disabled selected>Selecciona un proyecto...</option>
                         <option *ngFor="let proyecto of proyectos()" [ngValue]="proyecto.id">
                             {{ proyecto.nombre }} - {{ proyecto.ubicacion }}
@@ -75,14 +87,11 @@
 
         <!-- Resultados del Análisis -->
         <div *ngIf="!loading() && !error() && desviacion()" class="space-y-6">
-
             <!-- Card Principal: Nivel de Riesgo -->
             <div class="card bg-base-100 shadow-2xl">
                 <div class="card-body">
                     <h2 class="card-title text-2xl mb-4">Resultado del Análisis</h2>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                         <!-- Nivel de Riesgo -->
                         <div class="stat bg-base-200 rounded-lg p-6">
                             <div class="stat-title text-base-content/70 font-semibold mb-2">Nivel de Riesgo</div>
@@ -109,7 +118,6 @@
                                 vs. Presupuesto Estimado Original
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -119,7 +127,6 @@
                 <div class="card-body">
                     <h2 class="card-title text-xl mb-4"><i class="fa-solid fa-money-bill-trend-up"></i> Análisis de
                         Costos</h2>
-
                     <div class="overflow-x-auto">
                         <table class="table table-zebra">
                             <thead>
@@ -166,7 +173,6 @@
                     <div class="text-sm">{{ desviacion()?.mensaje }}</div>
                 </div>
             </div>
-
         </div>
 
         <!-- Empty State -->
@@ -180,6 +186,5 @@
             <p class="text-base-content/70">Elige un proyecto en el selector superior para ver su análisis de riesgo
                 financiero</p>
         </div>
-
     </div>
 </div>

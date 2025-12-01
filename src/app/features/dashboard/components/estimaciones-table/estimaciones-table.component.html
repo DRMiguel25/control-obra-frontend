@@ -12,8 +12,8 @@
           <th>CONCEPTO</th>
           <th>MONTO ESTIMADO</th>
           <th>AVANCE FÍSICO</th>
-          <th>AVANCES REGISTRADOS</th>
-          <th>ACCIÓN</th>
+          <th class="text-center">AVANCES REGISTRADOS</th>
+          <th class="text-center">ACCIÓN</th>
         </tr>
       </thead>
 
@@ -31,13 +31,19 @@
               <span class="text-sm font-semibold">{{ est.avancePorcentaje | number:'1.0-1' }}%</span>
             </td>
 
-            <td>
-              <span class="badge badge-info">{{ est.avances.length }} avances</span>
+            <td class="text-center">
+              <button class="btn btn-sm btn-info gap-3 text-white px-4" (click)="toggleExpansion(est.id)">
+                {{ est.avances.length }} avances
+                <i class="fa-solid" [class.fa-chevron-down]="!isExpanded(est.id)"
+                  [class.fa-chevron-up]="isExpanded(est.id)"></i>
+              </button>
             </td>
 
             <td>
-              <div class="flex gap-2">
-                <button class="btn btn-sm bg-amber-500 text-white hover:bg-amber-600" (click)="onRegisterAvance(est)">
+              <div class="flex gap-4 justify-center items-center">
+                <button
+                  class="btn btn-sm bg-amber-500 text-white hover:bg-amber-600 px-6 flex items-center justify-center"
+                  (click)="onRegisterAvance(est)">
                   Registrar Avance
                 </button>
                 <button class="btn btn-sm btn-error" (click)="onDeleteEstimacion(est)" title="Eliminar estimación">
@@ -47,30 +53,79 @@
             </td>
           </tr>
 
-          <!-- Filas de avances (si existen) -->
-          <tr *ngFor="let avance of est.avances" class="bg-slate-50 border-l-4 border-blue-300">
-            <td colspan="1" class="pl-8 text-sm text-slate-600">
-              <span class="badge badge-sm badge-ghost">ID: {{ avance.id }}</span>
-              {{ avance.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}
-            </td>
-            <td class="text-sm font-semibold text-green-600">
-              ${{ avance.montoEjecutado | number: '1.2-2' }}
-            </td>
-            <td class="text-sm">
-              <span class="badge badge-success">{{ avance.porcentajeCompletado }}% completado</span>
-            </td>
-            <td></td>
-            <td>
-              <div class="flex gap-2">
-                <button class="btn btn-xs btn-warning" (click)="onEditAvance(avance)" title="Editar avance">
-                  <i class="fa-regular fa-pen-to-square"></i>
-                </button>
-                <button class="btn btn-xs btn-error" (click)="onDeleteAvance(avance)" title="Eliminar avance">
-                  <i class="fa-regular fa-trash-can"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
+          <!-- Filas de avances (si existen y están expandidos) -->
+          <ng-container *ngIf="isExpanded(est.id)">
+            <ng-container *ngFor="let avance of est.avances">
+              <tr class="bg-slate-50 border-l-4 border-blue-300 hover:bg-slate-100">
+                <!-- Col 1: ID y Fecha (Alineado con CONCEPTO) -->
+                <td class="pl-8">
+                  <div class="flex flex-col">
+                    <span class="badge badge-sm badge-ghost mb-1">ID: {{ avance.id }}</span>
+                    <span class="text-sm text-slate-600">{{ avance.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  </div>
+                </td>
+
+                <!-- Col 2: Monto Ejecutado (Alineado con MONTO ESTIMADO) -->
+                <td class="font-semibold text-green-600">
+                  ${{ avance.montoEjecutado | number: '1.2-2' }}
+                </td>
+
+                <!-- Col 3: % Completado (Alineado con AVANCE FÍSICO) -->
+                <td>
+                  <span class="badge badge-success">{{ avance.porcentajeCompletado }}% completado</span>
+                </td>
+
+                <!-- Col 4: Ver Fotos (Alineado con AVANCES REGISTRADOS) -->
+                <td class="text-center">
+                  <button class="btn btn-xs btn-primary text-white gap-3 px-4" (click)="toggleAvancePhotos(avance.id)">
+                    <i class="fa-solid fa-images"></i>
+                    {{ isAvancePhotosExpanded(avance.id) ? 'Ocultar' : 'Ver' }} ({{ avance.fotos?.length || 0 }})
+                  </button>
+                </td>
+
+                <!-- Col 5: Acciones (Alineado con ACCIÓN) -->
+                <td>
+                  <div class="flex gap-3 justify-center items-center">
+                    <button class="btn btn-xs btn-warning" (click)="onEditAvance(avance)" title="Editar avance">
+                      <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                    <button class="btn btn-xs btn-error" (click)="onDeleteAvance(avance)" title="Eliminar avance">
+                      <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Fila de Fotos (Expandible) -->
+              <tr *ngIf="isAvancePhotosExpanded(avance.id) && avance.fotos && avance.fotos.length > 0"
+                class="bg-slate-100">
+                <td colspan="5" class="p-4">
+                  <div class="w-full bg-white rounded-lg p-4 shadow-inner">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Evidencias Fotográficas</h4>
+                    <div class="flex justify-center w-full">
+                      <div class="carousel rounded-box w-64 bg-base-200 border border-base-300">
+                        <div *ngFor="let foto of avance.fotos" class="carousel-item w-full cursor-pointer"
+                          (click)="openImageModal('http://localhost:5000' + foto.url)">
+                          <img [src]="'http://localhost:5000' + foto.url"
+                            class="w-full object-cover hover:opacity-90 transition-opacity" alt="Evidencia"
+                            (error)="foto.url = 'assets/placeholder.png'" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Mensaje si no hay fotos pero se expandió -->
+              <tr *ngIf="isAvancePhotosExpanded(avance.id) && (!avance.fotos || avance.fotos.length === 0)"
+                class="bg-slate-100">
+                <td colspan="5" class="text-center py-4 text-slate-500 italic">
+                  No hay evidencias fotográficas registradas.
+                </td>
+              </tr>
+
+            </ng-container>
+          </ng-container>
         </ng-container>
 
         <tr *ngIf="!estimaciones || estimaciones.length === 0">
@@ -79,4 +134,21 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Modal de Imagen Full Screen -->
+  <dialog class="modal" [class.modal-open]="selectedImage()" (click)="closeImageModal()">
+    <div class="modal-box max-w-5xl bg-transparent shadow-none p-0 relative flex justify-center items-center"
+      (click)="$event.stopPropagation()">
+      <button class="btn btn-circle btn-sm absolute right-2 top-2 z-50 bg-white text-black border-none"
+        (click)="closeImageModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <img *ngIf="selectedImage()" [src]="selectedImage()" class="max-h-[90vh] max-w-full rounded-lg shadow-2xl"
+        alt="Evidencia Full Screen">
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button (click)="closeImageModal()">close</button>
+    </form>
+  </dialog>
+
 </div>

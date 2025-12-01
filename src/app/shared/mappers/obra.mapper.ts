@@ -10,16 +10,22 @@ export class ObraMapper {
       montoEjecutado: apiAvance.montoEjecutado,
       porcentajeCompletado: apiAvance.porcentajeCompletado,
       // Conversión clave de string a Date
-      fechaRegistro: new Date(apiAvance.fechaRegistro), 
-      costoId: apiAvance.costoID
+      fechaRegistro: new Date(apiAvance.fechaRegistro),
+      costoId: apiAvance.costoID,
+      fotos: apiAvance.fotos ? apiAvance.fotos.map(f => ({
+        id: f.id,
+        url: f.url,
+        orientacion: f.orientacion,
+        avanceObraId: f.avanceObraId
+      })) : []
     };
   }
 
   private static mapEstimacionCosto(apiEstimacion: EstimacionCostoApi): EstimacionCosto {
     const avances = apiEstimacion.avances ? apiEstimacion.avances.map(ObraMapper.mapAvanceObra) : [];
-    
+
     // Calcula el porcentaje de avance promedio de la estimación para mostrar en la tabla (diseño)
-    const avancePromedio = avances.length > 0 
+    const avancePromedio = avances.length > 0
       ? avances.reduce((sum, a) => sum + a.porcentajeCompletado, 0) / avances.length
       : 0;
 
@@ -30,7 +36,7 @@ export class ObraMapper {
       proyectoId: apiEstimacion.proyectoID,
       rowVersion: apiEstimacion.rowVersion,
       avances: avances,
-      avancePorcentaje: avancePromedio 
+      avancePorcentaje: avancePromedio
     };
   }
 
@@ -42,7 +48,7 @@ export class ObraMapper {
       nombre: apiProyecto.nombreObra,
       ubicacion: apiProyecto.ubicacion,
       // Conversión clave de string a Date
-      fechaInicio: new Date(apiProyecto.fechaInicio), 
+      fechaInicio: new Date(apiProyecto.fechaInicio),
       estimaciones: estimaciones,
     };
   }

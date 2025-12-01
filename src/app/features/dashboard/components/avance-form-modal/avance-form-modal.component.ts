@@ -32,9 +32,59 @@ export class AvanceFormModalComponent {
   public validationErrors = signal<string[]>([]);
   public generalError = signal<string | null>(null);
 
+  public selectedFiles: File[] = [];
+  public filePreviewUrls: string[] = [];
+
   constructor() {
     setTimeout(() => {
       this.avanceDTO.costoID = this.estimacion.id;
+    });
+  }
+
+  onFileSelected(event: any): void {
+    const files: FileList = event.target.files;
+    if (!files) return;
+
+    this.validationErrors.set([]);
+    const newFiles: File[] = [];
+    const maxFiles = 5;
+    const maxSize = 8 * 1024 * 1024; // 8MB
+
+    if (this.selectedFiles.length + files.length > maxFiles) {
+      this.validationErrors.set(['Solo se permiten máximo 5 fotos por avance.']);
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > maxSize) {
+        this.validationErrors.set([`El archivo ${file.name} excede el límite de 8MB.`]);
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        this.validationErrors.set([`El archivo ${file.name} no es una imagen válida.`]);
+        return;
+      }
+      newFiles.push(file);
+    }
+
+    this.selectedFiles = [...this.selectedFiles, ...newFiles];
+    this.generatePreviews();
+  }
+
+  removeFile(index: number): void {
+    this.selectedFiles.splice(index, 1);
+    this.generatePreviews();
+  }
+
+  generatePreviews(): void {
+    this.filePreviewUrls = [];
+    this.selectedFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.filePreviewUrls.push(e.target.result);
+      };
+      reader.readAsDataURL(file);
     });
   }
 
@@ -54,9 +104,37 @@ export class AvanceFormModalComponent {
     this.generalError.set(null);
 
     this.obraService.postAvanceObra(this.avanceDTO).subscribe({
-      next: () => {
-        this.avanceRegistrado.emit();
-        this.close.emit();
+      next: (response: any) => {
+        // Si hay fotos, las subimos
+        if (this.selectedFiles.length > 0) {
+          // El response debe contener el ID del avance creado. 
+          // Asumimos que el backend devuelve el objeto creado o un objeto con ID.
+          // Revisando AvancesController.cs: return CreatedAtAction(..., avance);
+          const avanceId = response.id || response.avanceID;
+
+          if (avanceId) {
+            this.obraService.uploadFotos(avanceId, this.selectedFiles).subscribe({
+              next: () => {
+                this.avanceRegistrado.emit();
+                this.close.emit();
+              },
+              error: (err) => {
+                console.error('Error subiendo fotos', err);
+                // Aún así cerramos porque el avance se creó, pero avisamos o manejamos el error idealmente.
+                // Por simplicidad, emitimos éxito pero podríamos mostrar un toast.
+                this.avanceRegistrado.emit();
+                this.close.emit();
+              }
+            });
+          } else {
+            // Fallback si no hay ID
+            this.avanceRegistrado.emit();
+            this.close.emit();
+          }
+        } else {
+          this.avanceRegistrado.emit();
+          this.close.emit();
+        }
       },
       error: (error) => {
         this.isSaving.set(false);

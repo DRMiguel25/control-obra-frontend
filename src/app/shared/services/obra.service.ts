@@ -222,4 +222,19 @@ export class ObraService {
       })
     );
   }
+
+  uploadFotos(avanceId: number, files: File[]): Observable<any> {
+    const url = `${this.apiUrl}/Avances/${avanceId}/fotos`;
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('fotos', file);
+    });
+
+    return this.http.post(url, formData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error al subir fotos:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }
